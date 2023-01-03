@@ -87,9 +87,12 @@ public class FalconMailCore {
 
     public static void main(String[] args) throws Exception {
         new FalconMailCore().sendMail("a message from falconmail", """
-                hi lopa
+                hi
                 
-                hello""");
+                issa big world out there
+                
+                sincerely,
+                the best program in the world""");
     }
 
 
