@@ -14,15 +14,24 @@ public class StaticNodes {
     static Button signInButton = new Button();
 
     static VBox recipientInfoVbox = new VBox();
-    static VBox toAndFromAddressesVbox = new VBox();
     static Label dataLocationLabel = new Label();
     static Button removeStoredCredential = new Button();
     static Button sendEmail = new Button();
+
+    static VBox toAndFromAddressesVbox = new VBox();
     static TextField recipientPhoneNumber = new TextField();
     static TextField recipientEmailAddress = new TextField();
     static TextField recipientCallName= new TextField();
+
+    static VBox userInfoVbox = new VBox();
+    static Label userInfoIdentifier = new Label();
     static TextField fromEmail = new TextField();
-    static ComboBox templateList = new ComboBox();
+    static TextField username = new TextField();
+
+    static VBox templateVbox = new VBox();
+    static Label templateSelectionIdentifier = new Label();
+    static ComboBox<String> templateList = new ComboBox();
+    static Button chooseTemplateFile = new Button();
 
     static FadeTransition fd1 = new FadeTransition();
     static FadeTransition fd2 = new FadeTransition();

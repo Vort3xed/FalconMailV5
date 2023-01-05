@@ -31,7 +31,7 @@ public class TextFileReader {
             textBlocks.add(currentBlock.toString());
 
             for (String textBlock : textBlocks) {
-                comboBox.getItems().add(textBlock.substring(0, 10));
+                comboBox.getItems().add(textBlock.substring(0, 80));
             }
             System.out.println(textBlocks.get(0));
             System.out.println(textBlocks.get(1));

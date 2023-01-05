@@ -29,11 +29,17 @@ import static com.google.api.services.gmail.GmailScopes.GMAIL_SEND;
 import static javax.mail.Message.RecipientType.TO;
 
 public class FalconMailCore {
-
-    private static final String TEST_EMAIL = "atharun@team4099.com";
-    private static final String TEST_TO_EMAIL = "atharun@team4099.com";
+    private static String TEST_EMAIL = "atharun@team4099.com";
+    private static String TEST_TO_EMAIL = "atharun@team4099.com";
     private final Gmail service;
 
+    public static void setTestEmail(String testEmail) {
+        TEST_EMAIL = testEmail;
+    }
+
+    public static void setTestToEmail(String testToEmail) {
+        TEST_TO_EMAIL = testToEmail;
+    }
     public FalconMailCore() throws Exception {
         NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
         GsonFactory jsonFactory = GsonFactory.getDefaultInstance();
@@ -91,7 +97,7 @@ public class FalconMailCore {
                 
                 issa big world out there
                 
-                hi matthew
+                hi guys
                 
                 sincerely,
                 the best program in the world""");
