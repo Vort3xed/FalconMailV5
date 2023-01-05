@@ -14,6 +14,8 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.File;
+
 import static com.company.StaticNodes.*;
 
 public class FalconMail extends Application {
@@ -24,13 +26,13 @@ public class FalconMail extends Application {
 
     public void start(Stage stage) {
         signInLayout.getChildren().addAll(welcomeVbox);
-        userInterfaceLayout.getChildren().addAll(recipientInfoVbox, toAndFromAddressesVbox);
+        userInterfaceLayout.getChildren().addAll(recipientInfoVbox, toAndFromAddressesVbox, templateList);
 
         Styling.styleVBox(welcomeVbox,244,100, 10);
         welcomeVbox.setAlignment(Pos.CENTER);
         welcomeVbox.getChildren().addAll(welcomeLabel, welcomeSubLabel, signInButton);
 
-        recipientInfoVbox.getChildren().addAll(dataLocationLabel,recipientPhoneNumber,recipientEmailAddress,recipientCallName);
+        recipientInfoVbox.getChildren().addAll(dataLocationLabel,recipientEmailAddress,recipientPhoneNumber,recipientCallName);
 
         styleSignInPage();
         setFadePhysics();
@@ -78,13 +80,28 @@ public class FalconMail extends Application {
         Styling.styleButtons(signInButton,"Enter Application",40,30,"-fx-background-color: #EAF4D3");
     }
     public void styleUserInterface(){
+        Styling.styleVBox(recipientInfoVbox, 490,30,12);
+        Styling.styleTextBoxes(recipientEmailAddress,"Enter Recipient Email",true);
+        Styling.styleTextBoxes(recipientPhoneNumber,"Enter Recipient Phone",true);
+        Styling.styleTextBoxes(recipientCallName,"Enter Recipient Name",true);
         Styling.styleLabels(dataLocationLabel,"Enter recipient info below",Font.font(15));
+
+
+        appendTemplates();
+
+        templateList.getItems().add("was goodie");
         userInterfaceScene.setFill(new LinearGradient(
                 0, 0, 1, 1, true, CycleMethod.NO_CYCLE,
                 new Stop(0, Color.web("#DBD8AE")),
                 new Stop(0.5, Color.web("#CA907E")),
                 new Stop(1, Color.web("#994636")))
         );
+    }
+    public static void appendTemplates(){
+
+        File file = new File("src/main/java/resources/templates.txt");
+        TextFileReader reader = new TextFileReader(file);
+        reader.readTextFile(templateList);
     }
 
     public static void main(String[] args) {
