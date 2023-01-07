@@ -16,29 +16,38 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.File;
+import java.util.ArrayList;
 
+import static com.company.FalconMailCore.setFromEmail;
+import static com.company.FalconMailCore.setToEmail;
 import static com.company.StaticNodes.*;
 
 public class FalconMail extends Application {
     Group signInLayout = new Group();
-    Group userInterfaceLayout = new Group();
+    static Group userInterfaceLayout = new Group();
     Scene signInScene = new Scene(signInLayout, 800, 600);
     Scene userInterfaceScene = new Scene(userInterfaceLayout, 800, 600);
     static String templateFileLocation = "src/main/java/resources/templates.txt";
+    static String spreadsheetFileLocation = "src/main/java/resources/EmailLog.xlsx";
+    static ArrayList<String> templateArray;
+
+    final String gradient1 = "#DBD8AE";
+    final String gradient2 = "#CA907E";
+    final String gradient3 = "#994636";
+    final String nodeColors = "#EAF4D3";
 
     public void start(Stage stage) {
         signInLayout.getChildren().addAll(welcomeVbox);
-        userInterfaceLayout.getChildren().addAll(recipientInfoVbox, toAndFromAddressesVbox, templateVbox);
-
-        Styling.styleVBox(welcomeVbox, 244, 100, 10);
-        welcomeVbox.setAlignment(Pos.CENTER);
-        welcomeVbox.getChildren().addAll(welcomeLabel, welcomeSubLabel, signInButton);
+        userInterfaceLayout.getChildren().addAll(recipientInfoVbox, toAndFromAddressesVbox, templateVbox, userInfoVbox, credentialsVbox, spreadSheetVbox, emailingVbox);
 
         styleSignInPage();
         setFadePhysics();
         styleUserInterface();
 
         chooseTemplateFile.setOnAction(this::handleFileSelection);
+        chooseSpreadsheetFile.setOnAction(this::handleFileSelection);
+        removeStoredCredential.setOnAction(this::handleTokenRemoval);
+        sendEmail.setOnAction(this::handleEmailSending);
 
         signInButton.setOnAction(e -> {
             fd1.play();
@@ -53,9 +62,9 @@ public class FalconMail extends Application {
 
         signInScene.setFill(new LinearGradient(
                 0, 0, 1, 1, true, CycleMethod.NO_CYCLE,
-                new Stop(0, Color.web("#DBD8AE")),
-                new Stop(0.5, Color.web("#CA907E")),
-                new Stop(1, Color.web("#994636")))
+                new Stop(0, Color.web(gradient1)),
+                new Stop(0.5, Color.web(gradient2)),
+                new Stop(1, Color.web(gradient3)))
         );
 
         stage.setScene(signInScene);
@@ -74,14 +83,18 @@ public class FalconMail extends Application {
         fd2.setCycleCount(1);
 
         fd1.setNode(welcomeVbox);
-        fd2.setNode(recipientInfoVbox);
+        fd2.setNode(userInterfaceLayout);
 
     }
 
     public void styleSignInPage() {
+
+        Styling.styleVBox(welcomeVbox, 244, 100, 10);
+        welcomeVbox.setAlignment(Pos.CENTER);
+        welcomeVbox.getChildren().addAll(welcomeLabel, welcomeSubLabel, signInButton);
         Styling.styleLabels(welcomeLabel, "Welcome to FalconMail", Font.font(30));
         Styling.styleLabels(welcomeSubLabel, "Only team account can be used!", Font.font(20));
-        Styling.styleButtons(signInButton, "Enter Application", 40, 30, "-fx-background-color: #EAF4D3");
+        Styling.styleButtons(signInButton, "Enter Application", 40, 30, "-fx-background-color: " + nodeColors);
     }
 
     public void styleUserInterface() {
@@ -94,24 +107,44 @@ public class FalconMail extends Application {
 
         appendTemplates();
         Styling.styleVBox(templateVbox, 30, 30, 12);
-        templateVbox.getChildren().addAll(templateSelectionIdentifier,chooseTemplateFile,templateList);
-        Styling.styleButtons(chooseTemplateFile,"Select a Template File",30,40,"-fx-background-color: #EAF4D3");
-        Styling.styleLabels(templateSelectionIdentifier,"Set the email body",Font.font(15));
+        templateVbox.getChildren().addAll(templateSelectionIdentifier, chooseTemplateFile, templateList);
+        Styling.styleButtons(chooseTemplateFile, "Select a Template File", 30, 40, "-fx-background-color: " + nodeColors);
+        Styling.styleLabels(templateSelectionIdentifier, "Set the email body", Font.font(15));
 
-        Styling.styleVBox(userInfoVbox,30,200,12);
-        userInfoVbox.getChildren().addAll(fromEmail,username);
+        Styling.styleVBox(userInfoVbox, 30, 280, 12);
+        userInfoVbox.getChildren().addAll(userInfoIdentifier, fromEmail, username);
+        Styling.styleTextBoxes(fromEmail, "Enter your email", true);
+        Styling.styleTextBoxes(username, "Enter your name", true);
+        Styling.styleLabels(userInfoIdentifier, "Enter your info:", Font.font(15));
+
+        Styling.styleVBox(spreadSheetVbox, 30, 430, 12);
+        spreadSheetVbox.getChildren().addAll(spreadSheetIdentifier, chooseSpreadsheetFile);
+        Styling.styleLabels(spreadSheetIdentifier, "Upload a spreadsheet to update!", Font.font(15));
+        Styling.styleButtons(chooseSpreadsheetFile,"Select a spreadsheet",30,40,"-fx-background-color: " + nodeColors);
+
+        Styling.styleVBox(emailingVbox, 300,430,12);
+        emailingVbox.getChildren().addAll(emailStatus,sendEmail);
+        Styling.styleLabels(emailStatus,"Email Status: ",Font.font(15));
+        Styling.styleButtons(sendEmail, "Send Email", 50, 200, "-fx-background-color: " + nodeColors);
+
+        Styling.styleVBox(credentialsVbox, 300, 280, 12);
+        credentialsVbox.getChildren().addAll(credentialLabel, removeStoredCredential);
+        Styling.styleLabels(credentialLabel, "Token Status: ", Font.font(15));
+        Styling.styleButtons(removeStoredCredential, "Remove the Saved Account Token", "-fx-background-color: " + nodeColors);
+
 
         userInterfaceScene.setFill(new LinearGradient(
                 0, 0, 1, 1, true, CycleMethod.NO_CYCLE,
-                new Stop(0, Color.web("#DBD8AE")),
-                new Stop(0.5, Color.web("#CA907E")),
-                new Stop(1, Color.web("#994636")))
+                new Stop(0, Color.web(gradient1)),
+                new Stop(0.5, Color.web(gradient2)),
+                new Stop(1, Color.web(gradient3)))
         );
     }
 
     public static void appendTemplates() {
         File file = new File(templateFileLocation);
         TextFileReader reader = new TextFileReader(file);
+        templateArray = reader.getTextBlocks();
         reader.readTextFile(templateList);
     }
 
@@ -119,10 +152,41 @@ public class FalconMail extends Application {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select file");
         File selectedFile = fileChooser.showOpenDialog(chooseTemplateFile.getScene().getWindow());
-        if (selectedFile != null) {
+        if (selectedFile != null && getFileExtension(selectedFile).equals("txt")) {
             templateFileLocation = selectedFile.getAbsolutePath();
             chooseTemplateFile.setText("Uploaded: " + selectedFile.getName());
             appendTemplates();
+        } else if (selectedFile != null && getFileExtension(selectedFile).equals("xlsx")){
+            spreadsheetFileLocation = selectedFile.getAbsolutePath();
+        }
+    }
+    public static String getFileExtension(File file) {
+        String fileName = file.getName();
+        int dotIndex = fileName.lastIndexOf('.');
+        return (dotIndex == -1) ? "" : fileName.substring(dotIndex + 1);
+    }
+
+    private void handleTokenRemoval(ActionEvent event) {
+        File token = new File("tokens/StoredCredential");
+        if (token.delete()) {
+            System.out.println("Deleted the file: " + token.getName());
+        } else {
+            System.out.println("Failed to delete the file.");
+        }
+    }
+
+    public void handleEmailSending(ActionEvent event) {
+        try {
+            setFromEmail(fromEmail.getText());
+            setToEmail(recipientEmailAddress.getText());
+            if (templateList.getSelectionModel().getSelectedIndex() != -1) {
+                new FalconMailCore().sendMail("a message from falconmail (if this works then its done)", templateArray.get(templateList.getSelectionModel().getSelectedIndex()));
+            }
+            ExcelUpdater updater = new ExcelUpdater(spreadsheetFileLocation);
+            updater.updateExcelFile(username.getText(),recipientCallName.getText(),recipientEmailAddress.getText(),recipientPhoneNumber.getText());
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

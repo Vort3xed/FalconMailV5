@@ -29,17 +29,18 @@ import static com.google.api.services.gmail.GmailScopes.GMAIL_SEND;
 import static javax.mail.Message.RecipientType.TO;
 
 public class FalconMailCore {
-    private static String TEST_EMAIL = "atharun@team4099.com";
-    private static String TEST_TO_EMAIL = "atharun@team4099.com";
+    private static String FROM_EMAIL = "atharun@team4099.com";
+    private static String TO_EMAIL = "atharun@team4099.com";
     private final Gmail service;
 
-    public static void setTestEmail(String testEmail) {
-        TEST_EMAIL = testEmail;
+    public static void setFromEmail(String fromEmail) {
+        FROM_EMAIL = fromEmail;
     }
 
-    public static void setTestToEmail(String testToEmail) {
-        TEST_TO_EMAIL = testToEmail;
+    public static void setToEmail(String toEmail) {
+        TO_EMAIL = toEmail;
     }
+
     public FalconMailCore() throws Exception {
         NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
         GsonFactory jsonFactory = GsonFactory.getDefaultInstance();
@@ -65,8 +66,8 @@ public class FalconMailCore {
         Properties props = new Properties();
         Session session = Session.getDefaultInstance(props, null);
         MimeMessage email = new MimeMessage(session);
-        email.setFrom(new InternetAddress(TEST_EMAIL));
-        email.addRecipient(TO, new InternetAddress(TEST_TO_EMAIL));
+        email.setFrom(new InternetAddress(FROM_EMAIL));
+        email.addRecipient(TO, new InternetAddress(TO_EMAIL));
         email.setSubject(subject);
         email.setText(message);
 
@@ -90,19 +91,6 @@ public class FalconMailCore {
             }
         }
     }
-
-    public static void main(String[] args) throws Exception {
-        new FalconMailCore().sendMail("a message from falconmail", """
-                hi
-                
-                issa big world out there
-                
-                hi guys
-                
-                sincerely,
-                the best program in the world""");
-    }
-
 
 
 }

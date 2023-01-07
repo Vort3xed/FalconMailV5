@@ -15,7 +15,9 @@ public class StaticNodes {
 
     static VBox recipientInfoVbox = new VBox();
     static Label dataLocationLabel = new Label();
-    static Button removeStoredCredential = new Button();
+
+    static VBox emailingVbox = new VBox();
+    static Label emailStatus = new Label();
     static Button sendEmail = new Button();
 
     static VBox toAndFromAddressesVbox = new VBox();
@@ -28,10 +30,18 @@ public class StaticNodes {
     static TextField fromEmail = new TextField();
     static TextField username = new TextField();
 
+    static VBox credentialsVbox = new VBox();
+    static Label credentialLabel = new Label();
+    static Button removeStoredCredential = new Button();
+
     static VBox templateVbox = new VBox();
     static Label templateSelectionIdentifier = new Label();
-    static ComboBox<String> templateList = new ComboBox();
+    static ComboBox<String> templateList = new ComboBox<>();
     static Button chooseTemplateFile = new Button();
+
+    static VBox spreadSheetVbox = new VBox();
+    static Label spreadSheetIdentifier = new Label();
+    static Button chooseSpreadsheetFile = new Button();
 
     static FadeTransition fd1 = new FadeTransition();
     static FadeTransition fd2 = new FadeTransition();

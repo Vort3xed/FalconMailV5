@@ -11,6 +11,9 @@ public class TextFileReader {
     private File file;
     private ArrayList<String> textBlocks;
 
+    public ArrayList<String> getTextBlocks() {
+        return textBlocks;
+    }
     public TextFileReader(File file) {
         this.file = file;
         textBlocks = new ArrayList<>();
@@ -33,8 +36,6 @@ public class TextFileReader {
             for (String textBlock : textBlocks) {
                 comboBox.getItems().add(textBlock.substring(0, 80));
             }
-            System.out.println(textBlocks.get(0));
-            System.out.println(textBlocks.get(1));
         } catch (IOException e) {
             e.printStackTrace();
         }
