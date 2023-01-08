@@ -77,7 +77,7 @@ public class FalconMail extends Application {
         fd1.setToValue(0);
         fd1.setCycleCount(1);
 
-        fd2.setDuration(Duration.millis(900));
+        fd2.setDuration(Duration.millis(1300));
         fd2.setFromValue(0);
         fd2.setToValue(10);
         fd2.setCycleCount(1);
@@ -99,11 +99,12 @@ public class FalconMail extends Application {
 
     public void styleUserInterface() {
         Styling.styleVBox(recipientInfoVbox, 490, 30, 12);
-        recipientInfoVbox.getChildren().addAll(dataLocationLabel, recipientEmailAddress, recipientPhoneNumber, recipientCallName);
+        recipientInfoVbox.getChildren().addAll(dataLocationLabel, recipientEmailAddress, recipientPhoneNumber, recipientCallName, emailSubject);
         Styling.styleTextBoxes(recipientEmailAddress, "Enter Recipient Email", true);
         Styling.styleTextBoxes(recipientPhoneNumber, "Enter Recipient Phone", true);
         Styling.styleTextBoxes(recipientCallName, "Enter Recipient Name", true);
         Styling.styleLabels(dataLocationLabel, "Enter recipient info below", Font.font(15));
+        Styling.styleTextBoxes(emailSubject,"Enter the email subject!",true);
 
         appendTemplates();
         Styling.styleVBox(templateVbox, 30, 30, 12);
@@ -158,6 +159,7 @@ public class FalconMail extends Application {
             appendTemplates();
         } else if (selectedFile != null && getFileExtension(selectedFile).equals("xlsx")){
             spreadsheetFileLocation = selectedFile.getAbsolutePath();
+            chooseSpreadsheetFile.setText("Uploaded: " + selectedFile.getName());
         }
     }
     public static String getFileExtension(File file) {
@@ -169,24 +171,28 @@ public class FalconMail extends Application {
     private void handleTokenRemoval(ActionEvent event) {
         File token = new File("tokens/StoredCredential");
         if (token.delete()) {
-            System.out.println("Deleted the file: " + token.getName());
+            credentialLabel.setText("Token Removed Successfully");
         } else {
-            System.out.println("Failed to delete the file.");
+            credentialLabel.setText("Token Removal Failed, File does not exist");
         }
     }
 
     public void handleEmailSending(ActionEvent event) {
         try {
+            emailStatus.setText("Sending Email");
             setFromEmail(fromEmail.getText());
             setToEmail(recipientEmailAddress.getText());
             if (templateList.getSelectionModel().getSelectedIndex() != -1) {
-                new FalconMailCore().sendMail("a message from falconmail (if this works then its done)", templateArray.get(templateList.getSelectionModel().getSelectedIndex()));
+                new FalconMailCore().sendMail(emailSubject.getText(), templateArray.get(templateList.getSelectionModel().getSelectedIndex()));
             }
             ExcelUpdater updater = new ExcelUpdater(spreadsheetFileLocation);
             updater.updateExcelFile(username.getText(),recipientCallName.getText(),recipientEmailAddress.getText(),recipientPhoneNumber.getText());
-
+            emailStatus.setText("Sent Email");
+            recipientEmailAddress.clear();
+            recipientCallName.clear();
+            recipientPhoneNumber.clear();
         } catch (Exception e) {
-            e.printStackTrace();
+            emailStatus.setText("Email Failed! Make sure all fields are filled");
         }
     }
 

@@ -15,4 +15,4 @@ TODO:
 11) fill up some space in main interface
 12) make a label stating to the user that the spreadsheet cannot be open while the program is running
 13) find a way to encrypt the client secret
-14) 
+14) get user input for the email subject

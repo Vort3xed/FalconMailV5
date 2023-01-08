@@ -29,12 +29,18 @@ public class TextFileReader {
                     currentBlock = new StringBuilder();
                     continue;
                 }
-                currentBlock.append(line + "\n");
+                if (line.trim().length() == 0) {
+                    currentBlock.append("\n");
+                } else {
+                    currentBlock.append(line + "\n");
+                }
             }
             textBlocks.add(currentBlock.toString());
 
             for (String textBlock : textBlocks) {
-                comboBox.getItems().add(textBlock.substring(0, 80));
+                int charactersInBlock = textBlock.length();
+                int substring = (int) (charactersInBlock*5.0f/100.0f);
+                comboBox.getItems().add(textBlock.substring(0, substring));
             }
         } catch (IOException e) {
             e.printStackTrace();

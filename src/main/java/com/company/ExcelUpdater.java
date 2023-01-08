@@ -31,14 +31,25 @@ public class ExcelUpdater {
         Row row = sheet.createRow(nextRowNum);
 
         // Update the cell values
+//        Cell cell0 = row.createCell(0);
+//        cell0.setCellValue(username);
+//        Cell cell1 = row.createCell(1);
+//        cell1.setCellValue(recipientName);
+//        Cell cell2 = row.createCell(2);
+//        cell2.setCellValue(recipientEmail);
+//        Cell cell3 = row.createCell(3);
+//        cell3.setCellValue(recipientPhoneNumber);
+
         Cell cell0 = row.createCell(0);
-        cell0.setCellValue(username);
+        cell0.setCellValue(recipientName);
         Cell cell1 = row.createCell(1);
-        cell1.setCellValue(recipientName);
+        cell1.setCellValue(username);
         Cell cell2 = row.createCell(2);
-        cell2.setCellValue(recipientEmail);
+        cell2.setCellValue(recipientPhoneNumber);
         Cell cell3 = row.createCell(3);
-        cell3.setCellValue(recipientPhoneNumber);
+        cell3.setCellValue(recipientEmail);
+
+        //Company Name, your own name, recipient phone, recipient email
 
         // Write the changes to the Excel file
         inputStream.close();

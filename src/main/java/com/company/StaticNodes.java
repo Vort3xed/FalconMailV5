@@ -24,6 +24,7 @@ public class StaticNodes {
     static TextField recipientPhoneNumber = new TextField();
     static TextField recipientEmailAddress = new TextField();
     static TextField recipientCallName= new TextField();
+    static TextField emailSubject = new TextField();
 
     static VBox userInfoVbox = new VBox();
     static Label userInfoIdentifier = new Label();
