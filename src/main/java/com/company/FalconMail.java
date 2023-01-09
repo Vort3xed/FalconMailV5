@@ -2,7 +2,6 @@ package com.company;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -51,12 +50,9 @@ public class FalconMail extends Application {
 
         signInButton.setOnAction(e -> {
             fd1.play();
-            fd1.setOnFinished(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    fd2.play();
-                    stage.setScene(userInterfaceScene);
-                }
+            fd1.setOnFinished(event -> {
+                fd2.play();
+                stage.setScene(userInterfaceScene);
             });
         });
 
@@ -197,7 +193,7 @@ public class FalconMail extends Application {
     }
 
     public static void main(String[] args) {
-        //DO NOT RUN THIS MAIN METHOD. IT WONT WORK BECAUSE JAVA IS DUMB. PLEASE RUN THE MAIN METHOD IN Main.java. TRUST ME.
+        //DO NOT RUN THIS MAIN METHOD. IT WON'T WORK BECAUSE JAVA IS DUMB. PLEASE RUN THE MAIN METHOD IN Main.java. TRUST ME.
         Application.launch(args);
     }
 }
