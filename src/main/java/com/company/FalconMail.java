@@ -22,13 +22,14 @@ import static com.company.FalconMailCore.setToEmail;
 import static com.company.StaticNodes.*;
 
 public class FalconMail extends Application {
-    Group signInLayout = new Group();
+    static Group signInLayout = new Group();
     static Group userInterfaceLayout = new Group();
     Scene signInScene = new Scene(signInLayout, 800, 600);
     Scene userInterfaceScene = new Scene(userInterfaceLayout, 800, 600);
     static String templateFileLocation = "src/main/java/resources/templates.txt";
     static String spreadsheetFileLocation = "src/main/java/resources/EmailLog.xlsx";
     static ArrayList<String> templateArray;
+    static String companyName;
 
     final String gradient1 = "#DBD8AE";
     final String gradient2 = "#CA907E";
@@ -36,9 +37,7 @@ public class FalconMail extends Application {
     final String nodeColors = "#EAF4D3";
 
     public void start(Stage stage) {
-        signInLayout.getChildren().addAll(welcomeVbox);
-        userInterfaceLayout.getChildren().addAll(recipientInfoVbox, toAndFromAddressesVbox, templateVbox, userInfoVbox, credentialsVbox, spreadSheetVbox, emailingVbox);
-
+        buildScenes();
         styleSignInPage();
         setFadePhysics();
         styleUserInterface();
@@ -83,6 +82,11 @@ public class FalconMail extends Application {
 
     }
 
+    public static void buildScenes() {
+        signInLayout.getChildren().addAll(welcomeVbox);
+        userInterfaceLayout.getChildren().addAll(recipientInfoVbox, toAndFromAddressesVbox, templateVbox, userInfoVbox, credentialsVbox, spreadSheetVbox, emailingVbox);
+    }
+
     public void styleSignInPage() {
 
         Styling.styleVBox(welcomeVbox, 244, 100, 10);
@@ -100,7 +104,7 @@ public class FalconMail extends Application {
         Styling.styleTextBoxes(recipientPhoneNumber, "Enter Recipient Phone", true);
         Styling.styleTextBoxes(recipientCallName, "Enter Recipient Name", true);
         Styling.styleLabels(dataLocationLabel, "Enter recipient info below", Font.font(15));
-        Styling.styleTextBoxes(emailSubject,"Enter the email subject!",true);
+        Styling.styleTextBoxes(emailSubject, "Enter the email subject!", true);
 
         appendTemplates();
         Styling.styleVBox(templateVbox, 30, 30, 12);
@@ -117,11 +121,11 @@ public class FalconMail extends Application {
         Styling.styleVBox(spreadSheetVbox, 30, 430, 12);
         spreadSheetVbox.getChildren().addAll(spreadSheetIdentifier, chooseSpreadsheetFile);
         Styling.styleLabels(spreadSheetIdentifier, "Upload a spreadsheet to update!", Font.font(15));
-        Styling.styleButtons(chooseSpreadsheetFile,"Select a spreadsheet",30,40,"-fx-background-color: " + nodeColors);
+        Styling.styleButtons(chooseSpreadsheetFile, "Select a spreadsheet", 30, 40, "-fx-background-color: " + nodeColors);
 
-        Styling.styleVBox(emailingVbox, 300,430,12);
-        emailingVbox.getChildren().addAll(emailStatus,sendEmail);
-        Styling.styleLabels(emailStatus,"Email Status: ",Font.font(15));
+        Styling.styleVBox(emailingVbox, 300, 430, 12);
+        emailingVbox.getChildren().addAll(emailStatus, sendEmail);
+        Styling.styleLabels(emailStatus, "Email Status: ", Font.font(15));
         Styling.styleButtons(sendEmail, "Send Email", 50, 200, "-fx-background-color: " + nodeColors);
 
         Styling.styleVBox(credentialsVbox, 300, 280, 12);
@@ -153,12 +157,13 @@ public class FalconMail extends Application {
             templateFileLocation = selectedFile.getAbsolutePath();
             chooseTemplateFile.setText("Uploaded: " + selectedFile.getName());
             appendTemplates();
-        } else if (selectedFile != null && getFileExtension(selectedFile).equals("xlsx")){
+        } else if (selectedFile != null && getFileExtension(selectedFile).equals("xlsx")) {
             spreadsheetFileLocation = selectedFile.getAbsolutePath();
             chooseSpreadsheetFile.setText("Uploaded: " + selectedFile.getName());
         }
     }
-    public static String getFileExtension(File file) {
+
+    private static String getFileExtension(File file) {
         String fileName = file.getName();
         int dotIndex = fileName.lastIndexOf('.');
         return (dotIndex == -1) ? "" : fileName.substring(dotIndex + 1);
@@ -173,23 +178,51 @@ public class FalconMail extends Application {
         }
     }
 
-    public void handleEmailSending(ActionEvent event) {
+    private void handleEmailSending(ActionEvent event) {
         try {
             emailStatus.setText("Sending Email");
             setFromEmail(fromEmail.getText());
             setToEmail(recipientEmailAddress.getText());
-            if (templateList.getSelectionModel().getSelectedIndex() != -1) {
-                new FalconMailCore().sendMail(emailSubject.getText(), templateArray.get(templateList.getSelectionModel().getSelectedIndex()));
+            if (templateList.getSelectionModel().getSelectedIndex() != -1 && username.getText() != null &&
+                    recipientEmailAddress.getText() != null && recipientCallName.getText() != null &&
+                    emailSubject.getText() != null) {
+
+                new FalconMailCore().sendMail(emailSubject.getText(), useNames(
+                        templateArray.get(templateList.getSelectionModel().getSelectedIndex()),
+                        "{COMPANY_NAME}", recipientCallName.getText(),"{USER_NAME}",username.getText()));
+
+                ExcelUpdater updater = new ExcelUpdater(spreadsheetFileLocation);
+                updater.updateExcelFile(username.getText(), recipientCallName.getText(), recipientEmailAddress.getText(),
+                        recipientPhoneNumber.getText());
+                emailStatus.setText("Sent Email");
+            } else {
+                emailStatus.setText("Email Failed! Make sure all fields are filled");
             }
-            ExcelUpdater updater = new ExcelUpdater(spreadsheetFileLocation);
-            updater.updateExcelFile(username.getText(),recipientCallName.getText(),recipientEmailAddress.getText(),recipientPhoneNumber.getText());
-            emailStatus.setText("Sent Email");
+
             recipientEmailAddress.clear();
             recipientCallName.clear();
             recipientPhoneNumber.clear();
         } catch (Exception e) {
-            emailStatus.setText("Email Failed! Make sure all fields are filled");
+            emailStatus.setText("Email Failed! Unexpected error caught");
+            System.out.println("If you saw this because you're running the program in an IDE, there is a high chance that the \"resources\" folder is not marked as resources in the project structure.");
         }
+    }
+
+    //    public static String appendCompanyName(String emailBody){
+//        StringBuilder str = new StringBuilder(emailBody);
+//        str.replace("{COMPANY_NAME}");
+//        return "";
+//    }
+    public static String useNames(String emailBody, String recipientSuperKey, String recipientName, String userSuperKey, String userName) {
+        String returnString = emailBody;
+        try {
+            returnString.replace(recipientSuperKey, recipientName);
+            returnString.replace(userSuperKey,userName);
+            return returnString;
+        } catch (Exception ignored) {
+            System.out.println("Critical Error!");
+        }
+        return returnString;
     }
 
     public static void main(String[] args) {
