@@ -8,7 +8,7 @@ TODO:
 4) ~~give the main interface the ability to pick a certain email body template~~
 5) ~~make a method that gets the user's name~~
 6) ~~make user input for recipient email, phone number, and name~~
-7) ~~make a method that gets the recipients name to make personalized emails~~ (impossible)
+7) ~~make a method that gets the recipients name to make personalized emails~~
 8) ~~make it so that you know what file is uploaded on the button for spreadsheet upload~~
 9) make a label that tells you what your missing for email sending
 10) ~~make it so that recipient info clears after it updates the spreadsheet and sends the email~~
