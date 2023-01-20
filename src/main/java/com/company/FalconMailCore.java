@@ -31,6 +31,7 @@ import static javax.mail.Message.RecipientType.TO;
 public class FalconMailCore {
     private static String FROM_EMAIL = "atharun@team4099.com";
     private static String TO_EMAIL = "atharun@team4099.com";
+    private static String clientKeyLocation = "/client_secret_772614566753-bd3mfnqsnfb00eimeemtu0462imp05m5.apps.googleusercontent.com.json";
     private final Gmail service;
 
     public static void setFromEmail(String fromEmail) {
@@ -39,6 +40,10 @@ public class FalconMailCore {
 
     public static void setToEmail(String toEmail) {
         TO_EMAIL = toEmail;
+    }
+
+    public static void setClientKeyLocation(String keyLocation) {
+        clientKeyLocation = keyLocation;
     }
 
     public FalconMailCore() throws Exception {
@@ -51,7 +56,7 @@ public class FalconMailCore {
 
     private static Credential getCredentials(final NetHttpTransport httpTransport, GsonFactory jsonFactory)
             throws IOException {
-        GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(jsonFactory, new InputStreamReader(FalconMailCore.class.getResourceAsStream("/client_secret_772614566753-bd3mfnqsnfb00eimeemtu0462imp05m5.apps.googleusercontent.com.json")));
+        GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(jsonFactory, new InputStreamReader(FalconMailCore.class.getResourceAsStream(clientKeyLocation)));
 
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
                 httpTransport, jsonFactory, clientSecrets, Set.of(GMAIL_SEND))

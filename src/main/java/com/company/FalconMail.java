@@ -19,29 +19,35 @@ import java.util.ArrayList;
 
 import static com.company.FalconMailCore.setFromEmail;
 import static com.company.FalconMailCore.setToEmail;
+import static com.company.FalconMailCore.setClientKeyLocation;
 import static com.company.StaticNodes.*;
 
 public class FalconMail extends Application {
     static Group signInLayout = new Group();
     static Group userInterfaceLayout = new Group();
+
     Scene signInScene = new Scene(signInLayout, 800, 600);
     Scene userInterfaceScene = new Scene(userInterfaceLayout, 800, 600);
+
     static String templateFileLocation = "src/main/java/resources/templates.txt";
     static String spreadsheetFileLocation = "src/main/java/resources/EmailLog.xlsx";
     static ArrayList<String> templateArray;
-    static String companyName;
 
-    final String gradient1 = "#DBD8AE";
-    final String gradient2 = "#CA907E";
-    final String gradient3 = "#994636";
-    final String nodeColors = "#EAF4D3";
+    final String gradient1 = "#0D1117";
+    final String gradient2 = "#0D1117";
+    final String gradient3 = "#0D1117";
+    final String buttonColor = "#EFAE04";
+    final String textColor = "#FFFFFF";
+    final String buttonTextColor = "#FFFFFF";
 
     public void start(Stage stage) {
+        stage.setTitle("FalconMail V5");
         buildScenes();
         styleSignInPage();
         setFadePhysics();
         styleUserInterface();
 
+        chooseClientKey.setOnAction(this::handleFileSelection);
         chooseTemplateFile.setOnAction(this::handleFileSelection);
         chooseSpreadsheetFile.setOnAction(this::handleFileSelection);
         removeStoredCredential.setOnAction(this::handleTokenRemoval);
@@ -84,17 +90,16 @@ public class FalconMail extends Application {
 
     public static void buildScenes() {
         signInLayout.getChildren().addAll(welcomeVbox);
-        userInterfaceLayout.getChildren().addAll(recipientInfoVbox, toAndFromAddressesVbox, templateVbox, userInfoVbox, credentialsVbox, spreadSheetVbox, emailingVbox);
+        userInterfaceLayout.getChildren().addAll(recipientInfoVbox, toAndFromAddressesVbox, templateVbox, userInfoVbox, credentialsVbox, fileInputVbox, emailingVbox);
     }
 
     public void styleSignInPage() {
-
         Styling.styleVBox(welcomeVbox, 244, 100, 10);
         welcomeVbox.setAlignment(Pos.CENTER);
         welcomeVbox.getChildren().addAll(welcomeLabel, welcomeSubLabel, signInButton);
-        Styling.styleLabels(welcomeLabel, "Welcome to FalconMail", Font.font(30));
-        Styling.styleLabels(welcomeSubLabel, "Only team account can be used!", Font.font(20));
-        Styling.styleButtons(signInButton, "Enter Application", 40, 30, "-fx-background-color: " + nodeColors);
+        Styling.styleLabels(welcomeLabel, "Welcome to FalconMail", Font.font(30),"-fx-text-fill:"+textColor);
+        Styling.styleLabels(welcomeSubLabel, "Only team account can be used!", Font.font(20),"-fx-text-fill:"+textColor);
+        Styling.styleButtons(signInButton, "Enter Application", 40, 30, "-fx-background-color: " + buttonColor + "; -fx-text-fill:"+buttonTextColor);
     }
 
     public void styleUserInterface() {
@@ -103,35 +108,37 @@ public class FalconMail extends Application {
         Styling.styleTextBoxes(recipientEmailAddress, "Enter Recipient Email", true);
         Styling.styleTextBoxes(recipientPhoneNumber, "Enter Recipient Phone", true);
         Styling.styleTextBoxes(recipientCallName, "Enter Recipient Name", true);
-        Styling.styleLabels(dataLocationLabel, "Enter recipient info below", Font.font(15));
+        Styling.styleLabels(dataLocationLabel, "Enter recipient info below", Font.font(15),"-fx-text-fill:"+textColor);
         Styling.styleTextBoxes(emailSubject, "Enter the email subject!", true);
 
         appendTemplates();
         Styling.styleVBox(templateVbox, 30, 30, 12);
         templateVbox.getChildren().addAll(templateSelectionIdentifier, chooseTemplateFile, templateList);
-        Styling.styleButtons(chooseTemplateFile, "Select a Template File", 30, 40, "-fx-background-color: " + nodeColors);
-        Styling.styleLabels(templateSelectionIdentifier, "Set the email body", Font.font(15));
+        Styling.styleButtons(chooseTemplateFile, "Select a Template File", 30, 40, "-fx-background-color: " + buttonColor + "; -fx-text-fill:"+buttonTextColor);
+        Styling.styleLabels(templateSelectionIdentifier, "Set the email body", Font.font(15),"-fx-text-fill:"+textColor);
 
         Styling.styleVBox(userInfoVbox, 30, 280, 12);
         userInfoVbox.getChildren().addAll(userInfoIdentifier, fromEmail, username);
         Styling.styleTextBoxes(fromEmail, "Enter your email", true);
         Styling.styleTextBoxes(username, "Enter your name", true);
-        Styling.styleLabels(userInfoIdentifier, "Enter your info:", Font.font(15));
+        Styling.styleLabels(userInfoIdentifier, "Enter your info:", Font.font(15),"-fx-text-fill:"+textColor);
 
-        Styling.styleVBox(spreadSheetVbox, 30, 430, 12);
-        spreadSheetVbox.getChildren().addAll(spreadSheetIdentifier, chooseSpreadsheetFile);
-        Styling.styleLabels(spreadSheetIdentifier, "Upload a spreadsheet to update!", Font.font(15));
-        Styling.styleButtons(chooseSpreadsheetFile, "Select a spreadsheet", 30, 40, "-fx-background-color: " + nodeColors);
+        Styling.styleVBox(fileInputVbox, 30, 430, 12);
+        fileInputVbox.getChildren().addAll(spreadSheetIdentifier, chooseSpreadsheetFile, clientKeyIdentifier, chooseClientKey);
+        Styling.styleLabels(spreadSheetIdentifier, "Upload a spreadsheet to update!", Font.font(15),"-fx-text-fill:"+textColor);
+        Styling.styleButtons(chooseSpreadsheetFile, "Select a spreadsheet", 30, 40, "-fx-background-color: " + buttonColor + "; -fx-text-fill:"+buttonTextColor);
+        Styling.styleLabels(clientKeyIdentifier, "Select a Client Key!", Font.font(15),"-fx-text-fill:"+textColor);
+        Styling.styleButtons(chooseClientKey,"Select a Key", 30,40,"-fx-background-color: " + buttonColor + "; -fx-text-fill:"+buttonTextColor);
 
         Styling.styleVBox(emailingVbox, 300, 430, 12);
         emailingVbox.getChildren().addAll(emailStatus, sendEmail);
-        Styling.styleLabels(emailStatus, "Email Status: ", Font.font(15));
-        Styling.styleButtons(sendEmail, "Send Email", 50, 200, "-fx-background-color: " + nodeColors);
+        Styling.styleLabels(emailStatus, "Email Status: ", Font.font(15),"-fx-text-fill:"+textColor);
+        Styling.styleButtons(sendEmail, "Send Email", 50, 200, "-fx-background-color: " + buttonColor + "; -fx-text-fill:"+buttonTextColor);
 
         Styling.styleVBox(credentialsVbox, 300, 280, 12);
         credentialsVbox.getChildren().addAll(credentialLabel, removeStoredCredential);
-        Styling.styleLabels(credentialLabel, "Token Status: ", Font.font(15));
-        Styling.styleButtons(removeStoredCredential, "Remove the Saved Account Token", "-fx-background-color: " + nodeColors);
+        Styling.styleLabels(credentialLabel, "Token Status: ", Font.font(15),"-fx-text-fill:"+textColor);
+        Styling.styleButtons(removeStoredCredential, "Remove the Saved Account Token", "-fx-background-color: " + buttonColor + "; -fx-text-fill:"+buttonTextColor);
 
 
         userInterfaceScene.setFill(new LinearGradient(
@@ -160,6 +167,9 @@ public class FalconMail extends Application {
         } else if (selectedFile != null && getFileExtension(selectedFile).equals("xlsx")) {
             spreadsheetFileLocation = selectedFile.getAbsolutePath();
             chooseSpreadsheetFile.setText("Uploaded: " + selectedFile.getName());
+        } else if (selectedFile != null && getFileExtension(selectedFile).equals("json")){
+            setClientKeyLocation(selectedFile.getAbsolutePath());
+            chooseClientKey.setText("Uploaded Key!");
         }
     }
 
@@ -208,21 +218,15 @@ public class FalconMail extends Application {
         }
     }
 
-    //    public static String appendCompanyName(String emailBody){
-//        StringBuilder str = new StringBuilder(emailBody);
-//        str.replace("{COMPANY_NAME}");
-//        return "";
-//    }
     public static String useNames(String emailBody, String recipientSuperKey, String recipientName, String userSuperKey, String userName) {
-        String returnString = emailBody;
+        String returnString = "";
         try {
-            returnString.replace(recipientSuperKey, recipientName);
-            returnString.replace(userSuperKey,userName);
+            returnString = emailBody.replace(recipientSuperKey, recipientName).replace(userSuperKey,userName);
             return returnString;
-        } catch (Exception ignored) {
-            System.out.println("Critical Error!");
+        } catch (Exception e) {
+            System.out.println("Critical Error! (Superkeys do not exist in template?)");
         }
-        return returnString;
+        return emailBody;
     }
 
     public static void main(String[] args) {

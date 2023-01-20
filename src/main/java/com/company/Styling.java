@@ -5,6 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
@@ -76,9 +77,10 @@ public class Styling {
         name.setLayoutX(posX);
         name.setLayoutY(posY);
     }
-    public static void styleLabels(Label name, String text, Font font){
+    public static void styleLabels(Label name, String text, Font font, String cssStyle){
         name.setText(text);
         name.setFont(font);
+        name.setStyle(cssStyle);
     }
     public static void styleTextBoxes(TextField textFieldBoxes, String promptText, boolean traverse, double posX, double posY){
         textFieldBoxes.setPromptText(promptText);

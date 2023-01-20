@@ -40,9 +40,11 @@ public class StaticNodes {
     static ComboBox<String> templateList = new ComboBox<>();
     static Button chooseTemplateFile = new Button();
 
-    static VBox spreadSheetVbox = new VBox();
+    static VBox fileInputVbox = new VBox();
     static Label spreadSheetIdentifier = new Label();
     static Button chooseSpreadsheetFile = new Button();
+    static Label clientKeyIdentifier = new Label();
+    static Button chooseClientKey = new Button();
 
     static FadeTransition fd1 = new FadeTransition();
     static FadeTransition fd2 = new FadeTransition();
