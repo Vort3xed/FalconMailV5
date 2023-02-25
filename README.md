@@ -1,4 +1,4 @@
-![FalconMail Logo (2).png](..%2F..%2FDownloads%2FFalconMail%20Logo%20%282%29.png)
+![FalconMail Logo (2).png](src%2Fmain%2Fjava%2Fresources%2FFalconMail%20Logo%20%282%29.png)
 
 A program that can rapidly send emails and edit a spreadsheet with the recipient's information
 
