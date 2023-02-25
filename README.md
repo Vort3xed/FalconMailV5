@@ -31,5 +31,5 @@ A program that can rapidly send emails and edit a spreadsheet with the recipient
 11) make a label stating to the user that the spreadsheet cannot be open while the program is running
 12) find a way to encrypt the client secret (IMPORTANT or not?)
 13) ~~get user input for the email subject~~
-14) recolor the app in team colors
+14) ~~recolor the app in team colors~~
 15) dark mode and light mode switch?

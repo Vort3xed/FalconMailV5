@@ -33,12 +33,14 @@ public class FalconMail extends Application {
     static String spreadsheetFileLocation = "src/main/java/resources/EmailLog.xlsx";
     static ArrayList<String> templateArray;
 
-    final String gradient1 = "#0D1117";
-    final String gradient2 = "#0D1117";
-    final String gradient3 = "#0D1117";
-    final String buttonColor = "#EFAE04";
-    final String textColor = "#FFFFFF";
-    final String buttonTextColor = "#FFFFFF";
+    InterfaceStyling inter = new InterfaceStyling();
+
+    final String gradient1 = inter.getGradient1();
+    final String gradient2 = inter.getGradient2();
+    final String gradient3 = inter.getGradient3();
+    final String buttonColor = inter.getButtonColor();
+    final String textColor = inter.getTextColor();
+    final String buttonTextColor = inter.getButtonTextColor();
 
     public void start(Stage stage) {
         stage.setTitle("FalconMail V5");
@@ -46,12 +48,7 @@ public class FalconMail extends Application {
         styleSignInPage();
         setFadePhysics();
         styleUserInterface();
-
-        chooseClientKey.setOnAction(this::handleFileSelection);
-        chooseTemplateFile.setOnAction(this::handleFileSelection);
-        chooseSpreadsheetFile.setOnAction(this::handleFileSelection);
-        removeStoredCredential.setOnAction(this::handleTokenRemoval);
-        sendEmail.setOnAction(this::handleEmailSending);
+        implementButtons();
 
         signInButton.setOnAction(e -> {
             fd1.play();
@@ -70,6 +67,13 @@ public class FalconMail extends Application {
 
         stage.setScene(signInScene);
         stage.show();
+    }
+    public void implementButtons(){
+        chooseClientKey.setOnAction(this::handleFileSelection);
+        chooseTemplateFile.setOnAction(this::handleFileSelection);
+        chooseSpreadsheetFile.setOnAction(this::handleFileSelection);
+        removeStoredCredential.setOnAction(this::handleTokenRemoval);
+        sendEmail.setOnAction(this::handleEmailSending);
     }
 
     public static void setFadePhysics() {
