@@ -5,6 +5,8 @@ import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
@@ -14,7 +16,10 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.awt.*;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import static com.company.FalconMailCore.setFromEmail;
@@ -49,12 +54,34 @@ public class FalconMail extends Application {
         setFadePhysics();
         styleUserInterface();
         implementButtons();
+        appendLogo();
+
+        Image appIcon;
+        try {
+            appIcon = new Image(new FileInputStream("src/main/java/com/company/other/RawFalconmailLogo.png"));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        stage.getIcons().add(appIcon);
+
+        //Set icon on the taskbar/dock
+        if (Taskbar.isTaskbarSupported()) {
+            var taskbar = Taskbar.getTaskbar();
+
+            if (taskbar.isSupported(Taskbar.Feature.ICON_IMAGE)) {
+                final Toolkit defaultToolkit = Toolkit.getDefaultToolkit();
+                var dockIcon = defaultToolkit.getImage(getClass().getResource("src/main/java/com/company/other/RawFalconmailLogo.png"));
+                taskbar.setIconImage(dockIcon);
+            }
+
+        }
 
         signInButton.setOnAction(e -> {
             fd1.play();
             fd1.setOnFinished(event -> {
                 fd2.play();
                 stage.setScene(userInterfaceScene);
+                appendLogo2();
             });
         });
 
@@ -75,7 +102,34 @@ public class FalconMail extends Application {
         removeStoredCredential.setOnAction(this::handleTokenRemoval);
         sendEmail.setOnAction(this::handleEmailSending);
     }
+    public static void appendLogo(){
+        try {
+            Image image = new Image(new FileInputStream("src/main/java/com/company/other/FalconMailLogo.png"));
+            ImageView imageView = new ImageView(image);
+            imageView.setPreserveRatio(true);
+            imageView.setFitHeight(400);
+            imageView.setX(130);
+            imageView.setY(180);
+            signInLayout.getChildren().add(imageView);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
 
+    }
+    public static void appendLogo2(){
+        try {
+            Image image = new Image(new FileInputStream("src/main/java/com/company/other/FalconMailLogo.png"));
+            ImageView imageView = new ImageView(image);
+            imageView.setPreserveRatio(true);
+            imageView.setFitHeight(400);
+            imageView.setX(380);
+            imageView.setY(180);
+            userInterfaceLayout.getChildren().add(imageView);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
     public static void setFadePhysics() {
         fd1.setDuration(Duration.millis(500));
         fd1.setFromValue(10);
@@ -223,7 +277,7 @@ public class FalconMail extends Application {
     }
 
     public static String useNames(String emailBody, String recipientSuperKey, String recipientName, String userSuperKey, String userName) {
-        String returnString = "";
+        String returnString;
         try {
             returnString = emailBody.replace(recipientSuperKey, recipientName).replace(userSuperKey,userName);
             return returnString;
