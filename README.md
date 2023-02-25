@@ -1,12 +1,15 @@
-# FalconMailv5
+![FalconMail Logo (2).png](..%2F..%2FDownloads%2FFalconMail%20Logo%20%282%29.png)
+
 A program that can rapidly send emails and edit a spreadsheet with the recipient's information
+
+**This is the prototype edition.**
 
 # Installation and Usage
 ## Required:
 1) Java 15
 2) A registered application with gmail API enabled
 
-## Steps:
+## Installation Steps:
 1) Install java 15 by going to OpenJDK's website and installing "Java 15 (Azul Zulu)"
 2) Go to Google Cloud Console and sign in to the email of your organization.
 3) Create a new project. Make the project internal to the organization and provide the application with the Gmail API.
@@ -18,18 +21,7 @@ A program that can rapidly send emails and edit a spreadsheet with the recipient
 9) To run the application, make sure you run Main.java and **not** FalconMail.java
 
 ### TODO:
-1) ~~implement a class that will update and modify an Excel spreadsheet~~
-2) ~~remove sign in from initial page and make it a welcome page~~
-3) ~~set up everything in the main interface~~
-4) ~~give the main interface the ability to pick a certain email body template~~
-5) ~~make a method that gets the user's name~~
-6) ~~make user input for recipient email, phone number, and name~~
-7) ~~make a method that gets the recipients name to make personalized emails~~ (impossible)
-8) ~~make it so that you know what file is uploaded on the button for spreadsheet upload~~
-9) ~~make it so that recipient info clears after it updates the spreadsheet and sends the email~~
-10) ~~fill up some space in main interface~~
-11) make a label stating to the user that the spreadsheet cannot be open while the program is running
-12) find a way to encrypt the client secret (IMPORTANT or not?)
-13) ~~get user input for the email subject~~
-14) recolor the app in phs colors
-15) dark mode and light mode switch?
+1) make a label stating to the user that the spreadsheet cannot be open while the program is running
+2) find a way to encrypt the client secret (IMPORTANT or not?)
+3) recolor the app in phs colors
+4) dark mode and light mode switch?
