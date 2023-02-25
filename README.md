@@ -1,8 +1,10 @@
+<div align="center">
 ![FalconMail Logo (2).png](src%2Fmain%2Fjava%2Fcom%2Fcompany%2Fother%2FFalconMail%20Logo%20%282%29.png)
 
 A program that can rapidly send emails and edit a spreadsheet with the recipient's information
 
 **This is the prototype edition.**
+</div>
 
 # Installation and Usage
 ## Required:
