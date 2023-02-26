@@ -25,6 +25,8 @@ A program that can rapidly send emails and edit a spreadsheet with the recipient
 
 ## Screen Shots:
 ![betterHome.png](src%2Fmain%2Fjava%2Fcom%2Fcompany%2Fother%2FbetterHome.png)
+
+
 ![mainframe.png](src%2Fmain%2Fjava%2Fcom%2Fcompany%2Fother%2Fmainframe.png)
 
 ### TODO:
