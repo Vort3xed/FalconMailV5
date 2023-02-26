@@ -23,6 +23,10 @@ A program that can rapidly send emails and edit a spreadsheet with the recipient
 8) Go to FalconMailCore and modify the clientKeyLocation string to have the file name of your client key. Make sure that you keep the "/" before the name.
 9) To run the application, make sure you run Main.java and **not** FalconMail.java
 
+## Screen Shots:
+![betterHome.png](src%2Fmain%2Fjava%2Fcom%2Fcompany%2Fother%2FbetterHome.png)
+![mainframe.png](src%2Fmain%2Fjava%2Fcom%2Fcompany%2Fother%2Fmainframe.png)
+
 ### TODO:
 1) make a label stating to the user that the spreadsheet cannot be open while the program is running
 2) find a way to encrypt the client secret (IMPORTANT or not?)
