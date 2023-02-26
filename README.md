@@ -24,10 +24,9 @@ A program that can rapidly send emails and edit a spreadsheet with the recipient
 9) To run the application, make sure you run Main.java and **not** FalconMail.java
 
 ## Screen Shots:
-![betterHome.png](src%2Fmain%2Fjava%2Fcom%2Fcompany%2Fother%2FbetterHome.png)
+![home.png](src%2Fmain%2Fjava%2Fcom%2Fcompany%2Fother%2Fhome.png)
 
-
-
+---
 ![mainframe.png](src%2Fmain%2Fjava%2Fcom%2Fcompany%2Fother%2Fmainframe.png)
 
 ### TODO:
