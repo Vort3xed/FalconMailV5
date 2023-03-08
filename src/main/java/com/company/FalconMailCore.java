@@ -15,17 +15,26 @@ import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.model.Message;
 import org.apache.commons.codec.binary.Base64;
 
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.mail.BodyPart;
+import javax.mail.Multipart;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 
 import static com.google.api.services.gmail.GmailScopes.GMAIL_SEND;
+import static javax.mail.Message.RecipientType.CC;
 import static javax.mail.Message.RecipientType.TO;
 
 public class FalconMailCore {
@@ -67,14 +76,47 @@ public class FalconMailCore {
         LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }
-    public void sendMail(String subject, String message) throws Exception {
+
+    public void sendMail(String subject, String message, String attachmentLocation, String[] ccedMembers) throws Exception {
         Properties props = new Properties();
         Session session = Session.getDefaultInstance(props, null);
         MimeMessage email = new MimeMessage(session);
         email.setFrom(new InternetAddress(FROM_EMAIL));
         email.addRecipient(TO, new InternetAddress(TO_EMAIL));
         email.setSubject(subject);
-        email.setText(message);
+
+        Multipart multipart = new MimeMultipart();
+        MimeBodyPart textBodyPart = new MimeBodyPart();
+        textBodyPart.setText(message);
+
+        if (!Objects.equals(attachmentLocation, "")) {
+            MimeBodyPart attachmentBodyPart = new MimeBodyPart();
+            DataSource source = new FileDataSource(attachmentLocation);
+            attachmentBodyPart.setDataHandler(new DataHandler(source));
+            multipart.addBodyPart(attachmentBodyPart);
+        }
+        multipart.addBodyPart(textBodyPart);
+
+        email.setContent(multipart);
+
+        for (String ccedMember : ccedMembers) {
+            email.addRecipients(CC, String.valueOf(new InternetAddress(ccedMember)));
+        }
+
+        //Multipart multipart = new MimeMultipart();
+
+        //MimeBodyPart textBodyPart = new MimeBodyPart();
+        //textBodyPart.setText(message);
+
+        //MimeBodyPart attachmentBodyPart= new MimeBodyPart();
+        //DataSource source = new FileDataSource(attachementPath); // ex : "C:\\test.pdf"
+        //attachmentBodyPart.setDataHandler(new DataHandler(source));
+        //attachmentBodyPart.setFileName(fileName); // ex : "test.pdf"
+
+        //multipart.addBodyPart(textBodyPart);  // add the text part
+        //multipart.addBodyPart(attachmentBodyPart); // add the attachement part
+
+        //email.setContent(multipart);
 
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         email.writeTo(buffer);
