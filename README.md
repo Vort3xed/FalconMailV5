@@ -10,7 +10,7 @@ A program that can rapidly send emails and edit a spreadsheet with the recipient
 # Installation and Usage
 ## Required:
 1) Java 15
-2) A registered application with gmail API enabled
+2) A client_secret file (contact me for one or create your own by following installation steps)
 
 ## Installation Steps:
 1) Install java 15 by going to OpenJDK's website and installing "Java 15 (Azul Zulu)"
@@ -32,5 +32,5 @@ A program that can rapidly send emails and edit a spreadsheet with the recipient
 ### TODO:
 1) make a label stating to the user that the spreadsheet cannot be open while the program is running
 2) find a way to encrypt the client secret (IMPORTANT or not?)
-3) recolor the app in phs colors
+3) ~~recolor the app in phs colors~~
 4) dark mode and light mode switch?

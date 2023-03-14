@@ -22,6 +22,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 
 import static com.company.FalconMailCore.setFromEmail;
 import static com.company.FalconMailCore.setToEmail;
@@ -272,7 +273,7 @@ public class FalconMail extends Application {
     }
 
     public String[] getCCList(String ccList) {
-        String[] CCMembers = null;
+        String[] CCMembers;
         if (!(ccList.contains(","))) {
             return new String[]{ccList};
         } else {
@@ -296,8 +297,8 @@ public class FalconMail extends Application {
 
                 new FalconMailCore().sendMail(emailSubject.getText(), useNames(
                                 templateArray.get(templateList.getSelectionModel().getSelectedIndex()),
-                                "{COMPANY_NAME}", recipientCallName.getText(), "{USER_NAME}",
-                                username.getText()), attachmentFileLocation, getCCList(ccedMembers.getText()));
+                                "{COMPANY_NAME}", recipientCallName.getText(), "{USER_NAME}", username.getText(),"{TIME_OF_DAY}"),
+                        attachmentFileLocation, getCCList(ccedMembers.getText()));
 
                 ExcelUpdater updater = new ExcelUpdater(spreadsheetFileLocation);
                 updater.updateExcelFile(username.getText(), recipientCallName.getText(), recipientEmailAddress.getText(),
@@ -316,15 +317,28 @@ public class FalconMail extends Application {
         }
     }
 
-    public static String useNames(String emailBody, String recipientSuperKey, String recipientName, String userSuperKey, String userName) {
+    public static String useNames(String emailBody, String recipientSuperKey, String recipientName, String userSuperKey, String userName, String timeSuperKey) {
         String returnString;
         try {
-            returnString = emailBody.replace(recipientSuperKey, recipientName).replace(userSuperKey, userName);
+            returnString = emailBody.replace(recipientSuperKey, recipientName).replace(userSuperKey, userName).replace(timeSuperKey, getEffectiveTime());
             return returnString;
         } catch (Exception e) {
             System.out.println("Critical Error! (Superkeys do not exist in template?)");
         }
         return emailBody;
+    }
+    public static String getEffectiveTime(){
+        Calendar calendar = Calendar.getInstance();
+        if (calendar.get(Calendar.HOUR_OF_DAY) < 12) {
+            return "morning";
+        }
+        if (calendar.get(Calendar.HOUR_OF_DAY) > 12 && calendar.get(Calendar.HOUR_OF_DAY) < 18) {
+            return "afternoon";
+        }
+        if (calendar.get(Calendar.HOUR_OF_DAY) > 18) {
+            return "evening";
+        }
+        return "day";
     }
 
     public static void main(String[] args) {

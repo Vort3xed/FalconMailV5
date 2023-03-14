@@ -18,7 +18,6 @@ import org.apache.commons.codec.binary.Base64;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
-import javax.mail.BodyPart;
 import javax.mail.Multipart;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
@@ -109,14 +108,69 @@ public class FalconMailCore {
         //textBodyPart.setText(message);
 
         //MimeBodyPart attachmentBodyPart= new MimeBodyPart();
-        //DataSource source = new FileDataSource(attachementPath); // ex : "C:\\test.pdf"
+        //DataSource source = new FileDataSource(attachmentPath); // ex : "C:\\test.pdf"
         //attachmentBodyPart.setDataHandler(new DataHandler(source));
         //attachmentBodyPart.setFileName(fileName); // ex : "test.pdf"
 
         //multipart.addBodyPart(textBodyPart);  // add the text part
-        //multipart.addBodyPart(attachmentBodyPart); // add the attachement part
+        //multipart.addBodyPart(attachmentBodyPart); // add the attachment part
 
         //email.setContent(multipart);
+
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        email.writeTo(buffer);
+        byte[] rawMessageBytes = buffer.toByteArray();
+        String encodedEmail = Base64.encodeBase64URLSafeString(rawMessageBytes);
+        Message msg = new Message();
+        msg.setRaw(encodedEmail);
+
+        try {
+            msg = service.users().messages().send("me", msg).execute();
+            System.out.println("Message id: " + msg.getId());
+            System.out.println(msg.toPrettyString());
+        } catch (GoogleJsonResponseException e) {
+            GoogleJsonError error = e.getDetails();
+            if (error.getCode() == 403) {
+                System.err.println("Unable to send message: " + e.getDetails());
+            } else {
+                throw e;
+            }
+        }
+    }
+    public void sendHTMLMail(String subject) throws Exception {
+        Properties props = new Properties();
+        Session session = Session.getDefaultInstance(props, null);
+        MimeMessage email = new MimeMessage(session);
+        email.setFrom(new InternetAddress(FROM_EMAIL));
+        email.addRecipient(TO, new InternetAddress(TO_EMAIL));
+        email.setSubject(subject);
+
+        Multipart multipart = new MimeMultipart();
+
+        MimeBodyPart htmlBodyPart = new MimeBodyPart();
+        htmlBodyPart.setContent("""
+                html test
+                <p1> p1 tag </p1>
+                 
+                <b> bolded </b>
+                
+                <ul>
+                    <li>bullet point</li>
+                    <li>bullet point</li>
+                    <li>bullet point</li>
+                    <li>bullet point</li>
+                </ul>
+                
+                <ol>
+                    <li>ordered list</li>
+                    <li>ordered list</li>
+                    <li>ordered list</li>
+                </ol>
+                ""","text/html");
+
+        multipart.addBodyPart(htmlBodyPart);
+
+        email.setContent(multipart);
 
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         email.writeTo(buffer);
