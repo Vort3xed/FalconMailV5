@@ -25,9 +25,10 @@ A program that can rapidly send emails and edit a spreadsheet with the recipient
 
 ## Screen Shots:
 ![home.png](src%2Fmain%2Fjava%2Fcom%2Fcompany%2Fother%2Fhome.png)
-
 ---
-![mainframe.png](src%2Fmain%2Fjava%2Fcom%2Fcompany%2Fother%2Fmainframe.png)
+![notemplatemainframe.png](src%2Fmain%2Fjava%2Fcom%2Fcompany%2Fother%2Fnotemplatemainframe.png)
+---
+![withtemplatemainframe.png](src%2Fmain%2Fjava%2Fcom%2Fcompany%2Fother%2Fwithtemplatemainframe.png)
 
 ### TODO:
 1) make a label stating to the user that the spreadsheet cannot be open while the program is running

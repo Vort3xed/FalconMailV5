@@ -49,6 +49,8 @@ public class StaticNodes {
     static VBox emailExtras = new VBox();
     static Label extrasIdentifier = new Label();
     static TextField ccedMembers = new TextField();
+    static Label permanentCCedMembersLabel = new Label();
+    static TextField permanentCCedMembers = new TextField();
     static Button attachmentButton = new Button();
 
     static FadeTransition fd1 = new FadeTransition();

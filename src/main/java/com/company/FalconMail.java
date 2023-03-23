@@ -207,9 +207,11 @@ public class FalconMail extends Application {
         Styling.styleButtons(removeStoredCredential, "Remove the Saved Account Token", "-fx-background-color: " + buttonColor + "; -fx-text-fill:" + buttonTextColor);
 
         Styling.styleVBox(emailExtras, 520, 280, 12);
-        emailExtras.getChildren().addAll(extrasIdentifier, ccedMembers, attachmentButton);
+        emailExtras.getChildren().addAll(extrasIdentifier, ccedMembers, permanentCCedMembersLabel, permanentCCedMembers, attachmentButton);
         Styling.styleLabels(extrasIdentifier, "Enter CC Members and Attachments", Font.font(15), "-fx-text-fill:" + textColor);
         Styling.styleTextBoxes(ccedMembers, "moog@gml.com, boog@gml.com", true);
+        Styling.styleLabels(permanentCCedMembersLabel,"Permanent CC Members:", Font.font(15), "-fx-text-fill:" + textColor);
+        Styling.styleTextBoxes(permanentCCedMembers,"contact@booginc.com",true);
         Styling.styleButtons(attachmentButton, "Select File to Attach", "-fx-background-color: " + buttonColor + "; -fx-text-fill:" + buttonTextColor);
 
         userInterfaceScene.setFill(new LinearGradient(
@@ -298,7 +300,7 @@ public class FalconMail extends Application {
                 new FalconMailCore().sendMail(emailSubject.getText(), useNames(
                                 templateArray.get(templateList.getSelectionModel().getSelectedIndex()),
                                 "{COMPANY_NAME}", recipientCallName.getText(), "{USER_NAME}", username.getText(),"{TIME_OF_DAY}"),
-                        attachmentFileLocation, getCCList(ccedMembers.getText()));
+                        attachmentFileLocation, getCCList(ccedMembers.getText()), getCCList(permanentCCedMembers.getText()));
 
                 ExcelUpdater updater = new ExcelUpdater(spreadsheetFileLocation);
                 updater.updateExcelFile(username.getText(), recipientCallName.getText(), recipientEmailAddress.getText(),
@@ -311,6 +313,7 @@ public class FalconMail extends Application {
             recipientEmailAddress.clear();
             recipientCallName.clear();
             recipientPhoneNumber.clear();
+            ccedMembers.clear();
         } catch (Exception e) {
             emailStatus.setText("Email Failed! Unexpected error caught");
             System.out.println("If you saw this because you're running the program in an IDE, there is a high chance that the \"resources\" folder is not marked as resources in the project structure.");
@@ -332,10 +335,10 @@ public class FalconMail extends Application {
         if (calendar.get(Calendar.HOUR_OF_DAY) < 12) {
             return "morning";
         }
-        if (calendar.get(Calendar.HOUR_OF_DAY) > 12 && calendar.get(Calendar.HOUR_OF_DAY) < 18) {
+        if (calendar.get(Calendar.HOUR_OF_DAY) >= 12 && calendar.get(Calendar.HOUR_OF_DAY) < 18) {
             return "afternoon";
         }
-        if (calendar.get(Calendar.HOUR_OF_DAY) > 18) {
+        if (calendar.get(Calendar.HOUR_OF_DAY) >= 18) {
             return "evening";
         }
         return "day";

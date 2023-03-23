@@ -27,6 +27,7 @@ import javax.mail.internet.MimeMultipart;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.Properties;
@@ -76,7 +77,7 @@ public class FalconMailCore {
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }
 
-    public void sendMail(String subject, String message, String attachmentLocation, String[] ccedMembers) throws Exception {
+    public void sendMail(String subject, String message, String attachmentLocation, String[] ccedMembers, String[] permanentCCMembers) throws Exception {
         Properties props = new Properties();
         Session session = Session.getDefaultInstance(props, null);
         MimeMessage email = new MimeMessage(session);
@@ -92,6 +93,9 @@ public class FalconMailCore {
             MimeBodyPart attachmentBodyPart = new MimeBodyPart();
             DataSource source = new FileDataSource(attachmentLocation);
             attachmentBodyPart.setDataHandler(new DataHandler(source));
+            Path path = Paths.get(attachmentLocation);
+            Path fileName = path.getFileName();
+            attachmentBodyPart.setFileName(String.valueOf(fileName));
             multipart.addBodyPart(attachmentBodyPart);
         }
         multipart.addBodyPart(textBodyPart);
@@ -100,6 +104,9 @@ public class FalconMailCore {
 
         for (String ccedMember : ccedMembers) {
             email.addRecipients(CC, String.valueOf(new InternetAddress(ccedMember)));
+        }
+        for (String permCCedMember : permanentCCMembers) {
+            email.addRecipients(CC, String.valueOf(new InternetAddress(permCCedMember)));
         }
 
         //Multipart multipart = new MimeMultipart();
@@ -137,7 +144,7 @@ public class FalconMailCore {
             }
         }
     }
-    public void sendHTMLMail(String subject) throws Exception {
+    public void sendHTMLMail(String subject, String htmlText) throws Exception {
         Properties props = new Properties();
         Session session = Session.getDefaultInstance(props, null);
         MimeMessage email = new MimeMessage(session);
@@ -148,25 +155,7 @@ public class FalconMailCore {
         Multipart multipart = new MimeMultipart();
 
         MimeBodyPart htmlBodyPart = new MimeBodyPart();
-        htmlBodyPart.setContent("""
-                html test
-                <p1> p1 tag </p1>
-                 
-                <b> bolded </b>
-                
-                <ul>
-                    <li>bullet point</li>
-                    <li>bullet point</li>
-                    <li>bullet point</li>
-                    <li>bullet point</li>
-                </ul>
-                
-                <ol>
-                    <li>ordered list</li>
-                    <li>ordered list</li>
-                    <li>ordered list</li>
-                </ol>
-                ""","text/html");
+        htmlBodyPart.setContent(htmlText,"text/html");
 
         multipart.addBodyPart(htmlBodyPart);
 

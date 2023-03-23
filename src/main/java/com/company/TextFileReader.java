@@ -39,7 +39,7 @@ public class TextFileReader {
 
             for (String textBlock : textBlocks) {
                 int charactersInBlock = textBlock.length();
-                int substring = (int) (charactersInBlock*5.0f/100.0f);
+                int substring = (int) (charactersInBlock*3.0f/100.0f);
                 comboBox.getItems().add(textBlock.substring(0, substring));
             }
         } catch (IOException e) {
