@@ -32,6 +32,6 @@ A program that can rapidly send emails and edit a spreadsheet with the recipient
 
 ### TODO:
 1) make a label stating to the user that the spreadsheet cannot be open while the program is running
-2) find a way to encrypt the client secret (IMPORTANT or not?)
+2) find a way to distribute existing client secret
 3) ~~recolor the app in phs colors~~
 4) dark mode and light mode switch?
